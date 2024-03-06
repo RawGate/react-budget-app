@@ -1,110 +1,149 @@
-@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
-
-body {
-  background-color: #cbe7fd;
-  font-family: 'Dosis', sans-serif;
-  animation: fade-in 0.5s ease-in-out;
-}
-
-.container {
-  position: relative;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+.main__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  border-radius: 29px;
-  font-family: 'Dosis', sans-serif;
 }
 
-.container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('bbb.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 0.6; 
-  z-index: -1;
-  border-radius: 29px;
+.budget__group {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
 }
 
-@keyframes fade-in {
-  from {
-  opacity: 0;
-  transform: translateY(-20px);
-  }
-  to {
-  opacity: 1;
-  transform: translateY(0);
-  }
-  }
+.budget__income,
+.budget__expense,
+.balance__section {
+  width: 30%;
+  margin: 10px;
+}
 
-.ant-typography-title {
+.budget__title {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 20px;
-  font-family: 'Dosis', sans-serif;
 }
 
+/*IncomeForm and ExpenseForm style*/
 .form-container {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.transfer-button {
-  margin-top: 10px;
-  background-color: #322d77;
-  color: white;
-  border-radius: 4px;
-  font-size: 15px;
-  font-family: 'Dosis', sans-serif;
+.form-container label {
+  margin-bottom: 5px;
 }
 
-.balance {
-  font-size: 18px;
-  font-weight: bold;
-  font-family: 'Dosis', sans-serif;
+.form-container input {
+  margin-bottom: 10px;
 }
 
-.saving-info {
-  margin-top: 40px;
-  font-family: 'Dosis', sans-serif;
-  font-size: 16px;
-  font-weight: bold;
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px; 
 }
 
-.delete-button {
-  margin-top: 10px;
-  background-color: #322d77;
+.button-container input {
+  padding: 8px;
+  background-color: #2596be;
   color: white;
   border: none;
   border-radius: 15px;
-  font-size: 16px;
-  font-family: 'Dosis', sans-serif;
+  cursor: pointer;
 }
 
-.delete-button:hover {
-  background-color: #40a9ff;
+.button-container input:hover {
+  background-color: #12566f;
 }
 
-.add-button {
-  margin-top: 10px;
-  background-color: #322d77;
+.expense {
+  margin-top: 20px;
+}
+
+/* SavingForm styles */
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+button {
+  padding: 8px;
+  background-color: #2596be;
   color: white;
+  border: none;
   border-radius: 15px;
-  font-size: 15px;
-  font-family: 'Dosis', sans-serif;
+  cursor: pointer;
 }
 
-.add-button:hover {
-  background-color: #40a9ff;
+button:hover {
+  background-color: #12566f;
 }
 
-.ant-progress-bg {
-  background-color: #322d776c;
-  width: 300px; 
+p {
+  margin: 10px 0;
+}
+
+.progress-container {
+  width: 100%;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  border-radius: 5px;
+  background-color: #2596be;
+}
+
+/* Transfer style */
+
+.TransferToSaving {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.TransferToSaving form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.TransferToSaving label {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.TransferToSaving input {
+  padding: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.TransferToSaving input[type="submit"] {
+  padding: 8px;
+  background-color: #2596be;
+  color: white;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.TransferToSaving input[type="submit"]:hover {
+  background-color: #12566f;
 }

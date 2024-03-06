@@ -1,45 +1,85 @@
 import React, { useState } from 'react';
-import { Input, Button, DatePicker } from 'antd';
+import './App.css'
 
-interface ExpenseFormProps {
-  setExpense: React.Dispatch<React.SetStateAction<number>>;
-  onDeleteExpense: (amount: number) => void;
+
+interface ExpensesProps {
+  expenses: { id: number; source: string; amount: number; date: string }[];
+  onHandleExpenses: (source: string, amount: number, date: string) => void;
+  totalBalance: number;
 }
 
-const ExpenseForm: React.FC<ExpenseFormProps> = ({ setExpense, onDeleteExpense }) => {
-  const [expenseSource, setExpenseSource] = useState('');
-  const [expenseValue, setExpenseValue] = useState('');
-  const [expenseDate, setExpenseDate] = useState<Date | null>(null);
+const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, totalBalance }) => {
+  const [source, setSource] = useState<string>('');
+  const [amount, setAmount] = useState<number>(0);
+  const [date, setDate] = useState<string>('');
 
-  const handleAddExpense = () => {
-    const value = parseFloat(expenseValue);
-    if (!isNaN(value) && value > 0 && expenseDate) {
-      setExpense((prevExpense) => prevExpense + value);
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (source && amount && date) {
+      if (totalBalance - amount >= 0) {
+        onHandleExpenses(source, amount, date);
+        setSource('');
+        setAmount(0);
+        setDate('');
+      } else {
+        alert('Insufficient balance.');
+      }
+    } else {
+      alert('Input all the expense data');
     }
-    // Reset form fields
-    setExpenseSource('');
-    setExpenseValue('');
-    setExpenseDate(null);
+  };
+
+  const sourceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSource(event.target.value);
+  };
+  const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(Number(event.target.value));
+  };
+  const dateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDate(event.target.value);
   };
 
   return (
-    <div>
-      <h2>Expense</h2>
-      <Input
-        value={expenseSource}
-        onChange={(e) => setExpenseSource(e.target.value)}
-        placeholder="Expense Source"
-      />
-      <Input
-        value={expenseValue}
-        onChange={(e) => setExpenseValue(e.target.value)}
-        placeholder="Expense Value"
-        type="number"
-      />
-      <DatePicker value={expenseDate} onChange={(date) => setExpenseDate(date)} />
-      <Button className="add-button" onClick={handleAddExpense}>Add Expense</Button>
+    <div className="form-container">
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="new__expense__source">Source of Expense:</label>
+        <input
+          type="text"
+          name="expense"
+          id="new__expense__source"
+          value={source}
+          onChange={(e) => sourceChangeHandler(e)}
+        />
+        <label htmlFor="new__expense__amount">Amount:</label>
+        <input
+          type="number"
+          name="amount"
+          id="new__expense__amount"
+          value={amount}
+          onChange={(e) => amountChangeHandler(e)}
+        />
+        <label htmlFor="new__expense__date">Date of Expense:</label>
+        <input
+          type="date"
+          name="date"
+          id="new__expense__date"
+          value={date}
+          onChange={(e) => dateChangeHandler(e)}
+        />
+        <div className="button-container">
+          <input type="submit" value="Add Expense" />
+        </div>
+      </form>
+
+      <div className="expense">
+        {expenses.map((expense) => (
+          <p key={expense.id}>
+            {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
+          </p>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default ExpenseForm;
+export default Expenses;

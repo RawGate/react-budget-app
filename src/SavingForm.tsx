@@ -1,45 +1,60 @@
-import React, { useState } from 'react';
-import { Input, Button } from 'antd';
+// SavingForm.tsx
 
-interface SavingFormProps {
-  setTargetSaving: (value: number) => void;
-  setCurrentSaving: (value: number) => void;
-  onTransfer: (value: number) => void;
+import React, { useState } from 'react';
+import './App.css';
+
+interface SavingProps {
+  savings: number[];
 }
 
-const SavingForm: React.FC<SavingFormProps> = ({ setTargetSaving, setCurrentSaving, onTransfer }) => {
-  const [targetSavingValue, setTargetSavingValue] = useState('');
-  const [transferValue, setTransferValue] = useState('');
+const SavingForm: React.FC<SavingProps> = (props) => {
+  const [targetSaving, setTargetSaving] = useState<number>(0);
 
-  const handleAddTargetSaving = () => {
-    const value = parseFloat(targetSavingValue);
-    if (!isNaN(value) && value > 0) {
-      setTargetSaving(value);
-    }
-    setTargetSavingValue('');
+  const handleSavingTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTargetSaving(Number(e.target.value));
   };
 
-  const handleTransfer = () => {
-    const value = parseFloat(transferValue);
-    if (!isNaN(value) && value > 0) {
-      onTransfer(value);
-    }
-    setTransferValue('');
+  const handleClick = () => {
+    setTargetSaving(0);
   };
+
+  const totalSavings: number = props.savings.reduce(
+    (total, current) => total + current,
+    0
+  );
+
+  const progress: number = (totalSavings / targetSaving) * 100;
 
   return (
-    <div style={{ marginBottom: '20px' }}>
-      <h2>Add Saving</h2>
-      <Input
+    <div>
+      <label htmlFor="saving__target">Add your saving target:</label>
+      <input
         type="number"
-        placeholder="Target Saving Value"
-        value={targetSavingValue}
-        onChange={(e) => setTargetSavingValue(e.target.value)}
-        style={{ marginBottom: '10px' }}
+        name="saving"
+        id="saving__target"
+        value={targetSaving}
+        onChange={(e) => handleSavingTargetChange(e)}
       />
-      <Button className="add-button" onClick={handleAddTargetSaving}>
-        Set Target Saving
-      </Button>
+      <button onClick={handleClick}>Reset</button>
+
+      <p>
+        Your Target Saving is: <span>{targetSaving}</span>
+      </p>
+      <p>
+        Your Current Saving is: <span>{totalSavings}</span>
+      </p>
+      <p>
+        Saving Progress: <span>{isNaN(progress) ? 0 : progress.toFixed(2)}%</span>
+      </p>
+      <div className="progress-container">
+        <div
+          className="progress-bar"
+          style={{
+            width: `${isNaN(progress) ? 0 : progress}%`,
+            backgroundColor: '#4caf50',
+          }}
+        ></div>
+      </div>
     </div>
   );
 };
