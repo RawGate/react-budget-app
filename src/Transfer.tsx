@@ -26,7 +26,7 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
       setSaving(0);
       setErrorMessage('');
     } else {
-      setErrorMessage(validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance'); //error Property 'error' does not exist on type 'SafeParseReturnType<{ saving: number; }
+      setErrorMessage(validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance');
     }
   };
 
