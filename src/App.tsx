@@ -1,3 +1,5 @@
+// App.tsx
+
 import React, { useState } from 'react';
 import './App.css';
 import IncomeForm from './IncomeForm';
@@ -53,16 +55,25 @@ const App: React.FC = () => {
     setTotalBalance(total);
   };
 
+  const handleDeleteExpense = (id: number) => {
+    setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
+  };
+
+  const handleDeleteIncome = (id: number) => {
+    setIncomes((prevIncomes) => prevIncomes.filter((income) => income.id !== id));
+  };
+
   return (
     <main className="main__container">
       <h1 className="budget__title">Budget App</h1>
       <section className="budget__group">
         <div className="budget__income">
-          <IncomeForm onHandleIncome={handleIncome} incomes={incomes} />
+          <IncomeForm onHandleIncome={handleIncome} incomes={incomes} onDeleteIncome={handleDeleteIncome} />
         </div>
         <div className="budget__expense">
           <ExpenseForm
             onHandleExpenses={handleExpenses}
+            onDeleteExpense={handleDeleteExpense}
             totalBalance={totalBalance}
             expenses={expenses}
           />

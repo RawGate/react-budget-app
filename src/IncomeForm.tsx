@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
 
-
 interface IncomeProps {
   incomes: { id: number; source: string; amount: number; date: string }[];
   onHandleIncome: (source: string, amount: number, date: string) => void;
+  onDeleteIncome: (id: number) => void;
 }
 
-const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome }) => {
+const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIncome }) => {
   const [source, setSource] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [date, setDate] = useState<string>('');
@@ -68,12 +68,17 @@ const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome }) => {
         </div>
       </form>
 
-      <div className="expense-history">
+      <div className="income-history">
         {incomes.map((income) => {
           return (
-            <p key={income.id}>
-              {income.source.toUpperCase()}: {income.amount} on {income.date}
-            </p>
+            <div key={income.id} className="income-item">
+              <p>
+                {income.source.toUpperCase()}: {income.amount} on {income.date}
+              </p>
+              <button onClick={() => onDeleteIncome(income.id)} className="delete-button">
+              ✖
+              </button>
+            </div>
           );
         })}
       </div>

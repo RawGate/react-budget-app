@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import './App.css'
-
+import './App.css';
 
 interface ExpensesProps {
   expenses: { id: number; source: string; amount: number; date: string }[];
   onHandleExpenses: (source: string, amount: number, date: string) => void;
+  onDeleteExpense: (id: number) => void;
   totalBalance: number;
 }
 
-const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, totalBalance }) => {
+const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDeleteExpense, totalBalance }) => {
   const [source, setSource] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [date, setDate] = useState<string>('');
@@ -32,9 +32,11 @@ const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, totalBa
   const sourceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSource(event.target.value);
   };
+
   const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(Number(event.target.value));
   };
+
   const dateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDate(event.target.value);
   };
@@ -73,9 +75,14 @@ const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, totalBa
 
       <div className="expense">
         {expenses.map((expense) => (
-          <p key={expense.id}>
-            {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
-          </p>
+          <div key={expense.id} className="expense-item">
+            <p>
+              {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
+            </p>
+            <button onClick={() => onDeleteExpense(expense.id)} className="delete-button">
+            ✖
+            </button>
+          </div>
         ))}
       </div>
     </div>
