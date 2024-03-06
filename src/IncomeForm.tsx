@@ -1,5 +1,12 @@
 import React, { useState } from 'react';
+import { z } from 'zod';
 import './App.css';
+
+const incomeSchema = z.object({
+  source: z.string().nonempty(),
+  amount: z.number().positive(),
+  date: z.string().nonempty(),
+});
 
 interface IncomeProps {
   incomes: { id: number; source: string; amount: number; date: string }[];
@@ -14,13 +21,17 @@ const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIn
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (source && amount && date) {
+    const data = { source, amount, date };
+
+    const validationResult = incomeSchema.safeParse(data);
+
+    if (validationResult.success) {
       onHandleIncome(source, amount, date);
       setSource('');
       setAmount(0);
       setDate('');
     } else {
-      alert('Please write all the income details.');
+      alert('Please provide valid income details.');
     }
   };
 
@@ -42,45 +53,43 @@ const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIn
         <label htmlFor="new__income__source">Source of Income:</label>
         <input
           type="text"
-          name="income"
           id="new__income__source"
           value={source}
-          onChange={(e) => sourceChangeHandler(e)}
+          onChange={sourceChangeHandler}
         />
+
         <label htmlFor="new__income__amount">Amount:</label>
         <input
           type="number"
-          name="amount"
           id="new__income__amount"
           value={amount}
-          onChange={(e) => amountChangeHandler(e)}
+          onChange={amountChangeHandler}
         />
+
         <label htmlFor="new__income__date">Date of Income:</label>
         <input
           type="date"
-          name="date"
           id="new__income__date"
           value={date}
-          onChange={(e) => dateChangeHandler(e)}
+          onChange={dateChangeHandler}
         />
+
         <div className="button-container">
           <input type="submit" value="Add Income" />
         </div>
       </form>
 
       <div className="income-history">
-        {incomes.map((income) => {
-          return (
-            <div key={income.id} className="income-item">
-              <p>
-                {income.source.toUpperCase()}: {income.amount} on {income.date}
-              </p>
-              <button onClick={() => onDeleteIncome(income.id)} className="delete-button">
+        {incomes.map((income) => (
+          <div key={income.id} className="income-item">
+            <p>
+              {income.source.toUpperCase()}: {income.amount} on {income.date}
+            </p>
+            <button onClick={() => onDeleteIncome(income.id)} className="delete-button">
               ✖
-              </button>
-            </div>
-          );
-        })}
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

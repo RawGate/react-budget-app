@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
-import './App.css';
+import React from 'react';
+import './App.css'
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+const expenseSchema = z.object({
+  source: z.string().nonempty(),
+  amount: z.number().positive(),
+  date: z.string().nonempty(),
+});
 
 interface ExpensesProps {
   expenses: { id: number; source: string; amount: number; date: string }[];
@@ -9,65 +17,50 @@ interface ExpensesProps {
 }
 
 const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDeleteExpense, totalBalance }) => {
-  const [source, setSource] = useState<string>('');
-  const [amount, setAmount] = useState<number>(0);
-  const [date, setDate] = useState<string>('');
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (source && amount && date) {
-      if (totalBalance - amount >= 0) {
-        onHandleExpenses(source, amount, date);
-        setSource('');
-        setAmount(0);
-        setDate('');
+  const onSubmit = (data: any) => {
+    const validationResult = expenseSchema.safeParse(data);
+
+    if (validationResult.success) {
+      if (totalBalance - data.amount >= 0) {
+        onHandleExpenses(data.source, data.amount, data.date);
+        reset();
       } else {
         alert('Insufficient balance.');
       }
     } else {
-      alert('Input all the expense data');
+      alert('Please provide valid expense details.');
     }
-  };
-
-  const sourceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSource(event.target.value);
-  };
-
-  const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(event.target.value));
-  };
-
-  const dateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDate(event.target.value);
   };
 
   return (
     <div className="form-container">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor="new__expense__source">Source of Expense:</label>
         <input
           type="text"
-          name="expense"
           id="new__expense__source"
-          value={source}
-          onChange={(e) => sourceChangeHandler(e)}
+          {...register('source', { required: true })}
         />
+        {errors.source && <span className="error">Source is required</span>}
+
         <label htmlFor="new__expense__amount">Amount:</label>
         <input
           type="number"
-          name="amount"
           id="new__expense__amount"
-          value={amount}
-          onChange={(e) => amountChangeHandler(e)}
+          {...register('amount', { required: true, valueAsNumber: true })}
         />
+        {errors.amount && <span className="error">Amount is required</span>}
+
         <label htmlFor="new__expense__date">Date of Expense:</label>
         <input
           type="date"
-          name="date"
           id="new__expense__date"
-          value={date}
-          onChange={(e) => dateChangeHandler(e)}
+          {...register('date', { required: true })}
         />
+        {errors.date && <span className="error">Date is required</span>}
+
         <div className="button-container">
           <input type="submit" value="Add Expense" />
         </div>
@@ -80,7 +73,7 @@ const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDelet
               {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
             </p>
             <button onClick={() => onDeleteExpense(expense.id)} className="delete-button">
-            ✖
+              ✖
             </button>
           </div>
         ))}

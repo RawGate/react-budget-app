@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import './App.css'; 
+import { z } from 'zod';
+import './App.css';
+
+const transferSchema = z.object({
+  saving: z.number().positive(),
+});
 
 interface SavingProps {
   onHandleSaving: (amount: number) => void;
@@ -12,12 +17,16 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (props.totalBalance - saving >= 0) {
+    const data = { saving };
+
+    const validationResult = transferSchema.safeParse(data);
+
+    if (validationResult.success && props.totalBalance - saving >= 0) {
       props.onHandleSaving(saving);
       setSaving(0);
       setErrorMessage('');
     } else {
-      setErrorMessage('Not enough balance');
+      setErrorMessage(validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance'); //error Property 'error' does not exist on type 'SafeParseReturnType<{ saving: number; }
     }
   };
 
@@ -27,13 +36,13 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
 
   return (
     <div className="TransferToSaving">
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="add__saving">Transfer to saving</label>
         <input
           type="number"
           id="add__saving"
           value={saving}
-          onChange={(e) => handleSavingChange(e)}
+          onChange={handleSavingChange}
         />
         <input type="submit" value="Add to Saving" />
       </form>
