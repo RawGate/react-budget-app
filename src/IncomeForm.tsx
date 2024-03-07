@@ -9,26 +9,35 @@ const incomeSchema = z.object({
 });
 
 interface IncomeProps {
-  incomes: { id: number; source: string; amount: number; date: string }[];
+  incomes: {
+    id: number;
+    source: string;
+    amount: number;
+    date: string;
+  }[];
   onHandleIncome: (source: string, amount: number, date: string) => void;
   onDeleteIncome: (id: number) => void;
 }
 
-const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIncome }) => {
+const IncomeForm: React.FC<IncomeProps> = ({
+  incomes,
+  onHandleIncome,
+  onDeleteIncome,
+}) => {
   const [source, setSource] = useState<string>('');
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState<string>('');
   const [date, setDate] = useState<string>('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = { source, amount, date };
+    const data = { source, amount: Number(amount), date };
 
     const validationResult = incomeSchema.safeParse(data);
 
     if (validationResult.success) {
-      onHandleIncome(source, amount, date);
+      onHandleIncome(source, Number(amount), date);
       setSource('');
-      setAmount(0);
+      setAmount('');
       setDate('');
     } else {
       alert('Please provide valid income details.');
@@ -40,7 +49,7 @@ const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIn
   };
 
   const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(Number(event.target.value));
+    setAmount(event.target.value);
   };
 
   const dateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,7 +94,10 @@ const IncomeForm: React.FC<IncomeProps> = ({ incomes, onHandleIncome, onDeleteIn
             <p>
               {income.source.toUpperCase()}: {income.amount} on {income.date}
             </p>
-            <button onClick={() => onDeleteIncome(income.id)} className="delete-button">
+            <button
+              onClick={() => onDeleteIncome(income.id)}
+              className="delete-button"
+            >
               ✖
             </button>
           </div>

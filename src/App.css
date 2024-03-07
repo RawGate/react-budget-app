@@ -58,6 +58,7 @@
   border: none;
   border-radius: 15px;
   cursor: pointer;
+  width: 100px;
 }
 
 .button-container input:hover {
@@ -136,7 +137,7 @@ p {
 .TransferToSaving input {
   padding: 8px;
   margin-bottom: 15px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .TransferToSaving input[type="submit"] {
@@ -146,6 +147,7 @@ p {
   border: none;
   border-radius: 15px;
   cursor: pointer;
+  width: 110px;
 }
 
 .TransferToSaving input[type="submit"]:hover {

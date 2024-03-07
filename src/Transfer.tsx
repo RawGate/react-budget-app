@@ -12,26 +12,28 @@ interface SavingProps {
 }
 
 const TransferToSaving: React.FC<SavingProps> = (props) => {
-  const [saving, setSaving] = useState<number>(0);
+  const [saving, setSaving] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = { saving };
+    const data = { saving: Number(saving) };
 
     const validationResult = transferSchema.safeParse(data);
 
-    if (validationResult.success && props.totalBalance - saving >= 0) {
-      props.onHandleSaving(saving);
-      setSaving(0);
+    if (validationResult.success && props.totalBalance - Number(saving) >= 0) {
+      props.onHandleSaving(Number(saving));
+      setSaving('');
       setErrorMessage('');
     } else {
-      setErrorMessage(validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance');
+      setErrorMessage(
+        validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance'
+      );
     }
   };
 
   const handleSavingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSaving(Number(e.target.value));
+    setSaving(e.target.value);
   };
 
   return (

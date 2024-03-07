@@ -11,23 +11,26 @@ interface SavingProps {
 }
 
 const SavingForm: React.FC<SavingProps> = (props) => {
-  const [targetSaving, setTargetSaving] = useState<number>(0);
+  const [targetSaving, setTargetSaving] = useState<string>('');
 
   const handleSavingTargetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTargetSaving(Number(e.target.value));
+    setTargetSaving(e.target.value);
   };
 
   const handleClick = () => {
-    setTargetSaving(0);
+    setTargetSaving('');
   };
 
-  const totalSavings: number = props.savings.reduce((total, current) => total + current, 0);
+  const totalSavings: number = props.savings.reduce(
+    (total, current) => total + current,
+    0
+  );
 
-  const progress: number = (totalSavings / targetSaving) * 100;
+  const progress: number = (totalSavings / Number(targetSaving)) * 100;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = { targetSaving };
+    const data = { targetSaving: Number(targetSaving) };
 
     const validationResult = savingSchema.safeParse(data);
 
