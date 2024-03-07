@@ -19,7 +19,7 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
     e.preventDefault();
     const data = { saving: Number(saving) };
 
-    const validationResult = transferSchema.safeParse(data);
+    const validationResult = transferSchema.safeParse(data) as { success: true } | { success: false; error: z.ZodError };
 
     if (validationResult.success && props.totalBalance - Number(saving) >= 0) {
       props.onHandleSaving(Number(saving));
@@ -27,7 +27,7 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
       setErrorMessage('');
     } else {
       setErrorMessage(
-        validationResult.error ? 'Please provide a valid saving amount.' : 'Not enough balance'
+        validationResult.success ? 'Not enough balance' : 'Please provide a valid saving amount.'
       );
     }
   };
