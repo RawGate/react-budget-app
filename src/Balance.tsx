@@ -1,41 +1,48 @@
-import React from 'react'
+import React from 'react';
+
+interface Transaction {
+  id: number;
+  source: string;
+  amount: number;
+  date: string;
+}
 
 interface BalanceProps {
-  incomes: { id: number; source: string; amount: number; date: string }[]
-  expenses: { id: number; source: string; amount: number; date: string }[]
-  savings: number[]
-  handleGetTotalBalance: (total: number) => void
+  incomes: Transaction[];
+  expenses: Transaction[];
+  savings: number[];
+  handleGetTotalBalance: (total: number) => void;
 }
 
 const Balance: React.FC<BalanceProps> = (props) => {
-  let totalBalance: number = 0
+  let totalBalance: number = 0;
 
   const totalIncomeArr: number[] = props.incomes.map((income) => {
-    return income.amount
-  })
+    return income.amount;
+  });
 
   const totalIncome: number = totalIncomeArr.reduce(
     (total, current) => total + current,
     0
-  )
+  );
 
   const totalExpenseArr: number[] = props.expenses.map(
     (expense) => expense.amount
-  )
+  );
 
   const totalSavings: number = props.savings.reduce(
     (total, current) => total + current,
     0
-  )
+  );
 
   const totalExpense: number = totalExpenseArr.reduce(
     (total, current) => total + current,
     0
-  )
+  );
 
-  totalBalance = totalIncome - totalExpense - totalSavings
+  totalBalance = totalIncome - totalExpense - totalSavings;
 
-  props.handleGetTotalBalance(totalBalance)
+  props.handleGetTotalBalance(totalBalance);
 
   return (
     <>
@@ -44,7 +51,7 @@ const Balance: React.FC<BalanceProps> = (props) => {
         <span>{totalBalance}</span>
       </h1>
     </>
-  )
+  );
 }
 
 export default Balance;
