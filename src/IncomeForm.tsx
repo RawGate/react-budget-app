@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 const incomeSchema = z.object({
@@ -40,7 +42,11 @@ const IncomeForm: React.FC<IncomeProps> = ({
       setAmount('');
       setDate('');
     } else {
-      alert('Please provide valid income details.');
+      if (Number(amount) < 0) {
+        toast.error('Income amount cannot be less than 0');
+      } else {
+        toast.error('Please provide valid income details.');
+      }
     }
   };
 
@@ -59,29 +65,35 @@ const IncomeForm: React.FC<IncomeProps> = ({
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit}>
-        <label htmlFor="new__income__source">Source of Income:</label>
-        <input
-          type="text"
-          id="new__income__source"
-          value={source}
-          onChange={sourceChangeHandler}
-        />
+        <div className="input-box">
+          <label htmlFor="new__income__source">Source of Income:</label>
+          <input
+            type="text"
+            id="new__income__source"
+            value={source}
+            onChange={sourceChangeHandler}
+          />
+        </div>
 
-        <label htmlFor="new__income__amount">Amount:</label>
-        <input
-          type="number"
-          id="new__income__amount"
-          value={amount}
-          onChange={amountChangeHandler}
-        />
+        <div className="input-box">
+          <label htmlFor="new__income__amount">Amount:</label>
+          <input
+            type="number"
+            id="new__income__amount"
+            value={amount}
+            onChange={amountChangeHandler}
+          />
+        </div>
 
-        <label htmlFor="new__income__date">Date of Income:</label>
-        <input
-          type="date"
-          id="new__income__date"
-          value={date}
-          onChange={dateChangeHandler}
-        />
+        <div className="input-box">
+          <label htmlFor="new__income__date">Date of Income:</label>
+          <input
+            type="date"
+            id="new__income__date"
+            value={date}
+            onChange={dateChangeHandler}
+          />
+        </div>
 
         <div className="button-container">
           <input type="submit" value="Add Income" />
@@ -90,7 +102,7 @@ const IncomeForm: React.FC<IncomeProps> = ({
 
       <div className="income-history">
         {incomes.map((income) => (
-          <div key={income.id} className="income-item">
+          <div key={income.id} className="history-item">
             <p>
               {income.source.toUpperCase()}: {income.amount} on {income.date}
             </p>
@@ -103,6 +115,11 @@ const IncomeForm: React.FC<IncomeProps> = ({
           </div>
         ))}
       </div>
+
+      <ToastContainer
+        position="top-center"
+        toastStyle={{ marginTop: '50%', transform: 'translateY(-50%)' }}
+      />
     </div>
   );
 };

@@ -1,7 +1,9 @@
 import React from 'react';
-import './App.css'
-import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 
 const expenseSchema = z.object({
   source: z.string().nonempty(),
@@ -16,7 +18,12 @@ interface ExpensesProps {
   totalBalance: number;
 }
 
-const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDeleteExpense, totalBalance }) => {
+const Expenses: React.FC<ExpensesProps> = ({
+  expenses,
+  onHandleExpenses,
+  onDeleteExpense,
+  totalBalance,
+}) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   const onSubmit = (data: any) => {
@@ -27,48 +34,51 @@ const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDelet
         onHandleExpenses(data.source, data.amount, data.date);
         reset();
       } else {
-        alert('Insufficient balance.');
+        toast.error('Insufficient balance.');
       }
     } else {
-      alert('Please provide valid expense details.');
+      toast.error('Please provide valid expense details.');
     }
   };
 
   return (
     <div className="form-container">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor="new__expense__source">Source of Expense:</label>
-        <input
-          type="text"
-          id="new__expense__source"
-          {...register('source', { required: true })}
-        />
-        {errors.source && <span className="error">Source is required</span>}
+        <div className="input-box">
+          <label htmlFor="new__expense__source">Source of Expense:</label>
+          <input
+            type="text"
+            id="new__expense__source"
+            {...register('source', { required: true })}
+          />
+        </div>
 
-        <label htmlFor="new__expense__amount">Amount:</label>
-        <input
-          type="number"
-          id="new__expense__amount"
-          {...register('amount', { required: true, valueAsNumber: true })}
-        />
-        {errors.amount && <span className="error">Amount is required</span>}
+        <div className="input-box">
+          <label htmlFor="new__expense__amount">Amount:</label>
+          <input
+            type="number"
+            id="new__expense__amount"
+            {...register('amount', { required: true, valueAsNumber: true })}
+          />
+        </div>
 
-        <label htmlFor="new__expense__date">Date of Expense:</label>
-        <input
-          type="date"
-          id="new__expense__date"
-          {...register('date', { required: true })}
-        />
-        {errors.date && <span className="error">Date is required</span>}
+        <div className="input-box">
+          <label htmlFor="new__expense__date">Date of Expense:</label>
+          <input
+            type="date"
+            id="new__expense__date"
+            {...register('date', { required: true })}
+          />
+        </div>
 
         <div className="button-container">
           <input type="submit" value="Add Expense" />
         </div>
       </form>
 
-      <div className="expense">
+      <div className="expense-history">
         {expenses.map((expense) => (
-          <div key={expense.id} className="expense-item">
+          <div key={expense.id} className="history-item">
             <p>
               {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
             </p>
@@ -78,6 +88,8 @@ const Expenses: React.FC<ExpensesProps> = ({ expenses, onHandleExpenses, onDelet
           </div>
         ))}
       </div>
+
+      <ToastContainer position="top-center" />
     </div>
   );
 };

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css';
 
 const savingSchema = z.object({
@@ -35,9 +37,11 @@ const SavingForm: React.FC<SavingProps> = (props) => {
     const validationResult = savingSchema.safeParse(data);
 
     if (validationResult.success) {
-      // Handle saving target submission
     } else {
-      alert('Please provide a valid saving target.');
+      toast.error('Please provide valid income details.', {
+        toastId: 'error-toast',
+        position: 'top-center',
+      });
     }
   };
 
@@ -52,28 +56,28 @@ const SavingForm: React.FC<SavingProps> = (props) => {
           value={targetSaving}
           onChange={handleSavingTargetChange}
         />
-        <button type="submit">Submit</button>
         <button onClick={handleClick}>Reset</button>
       </form>
 
       <p>
-        Your Target Saving is: <span>{targetSaving}</span>
+        Target Saving: <span>{targetSaving}</span>
       </p>
       <p>
-        Your Current Saving is: <span>{totalSavings}</span>
+        Current Saving: <span>{totalSavings}</span>
       </p>
       <p>
-        Saving Progress: <span>{isNaN(progress) ? 0 : progress.toFixed(2)}%</span>
+        Progress: <span>{isNaN(progress) ? 0 : progress.toFixed(2)}%</span>
       </p>
       <div className="progress-container">
         <div
           className="progress-bar"
           style={{
             width: `${isNaN(progress) ? 0 : progress}%`,
-            backgroundColor: '#4caf50',
           }}
         ></div>
       </div>
+
+      <ToastContainer />
     </div>
   );
 };
