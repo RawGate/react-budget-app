@@ -70,7 +70,7 @@ const App: React.FC = () => {
         </div>
         <div className="budget__expense">
           <ExpenseForm
-            onHandleExpenses={handleExpenses} //Type '(source: string, amount: number, date: string) => void' is not assignable to type '(expense: { source: string; amount: string | number; date: string; }) => void'
+            onHandleExpenses={handleExpenses}
             onDeleteExpense={handleDeleteExpense}
             totalBalance={totalBalance}
             expenses={expenses}

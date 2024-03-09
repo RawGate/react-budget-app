@@ -22,9 +22,6 @@
   display: flex;
   justify-content: space-around;
   margin: 20px 0;
-  border: 1px solid #ccc;
-  border-radius: 1px;
-  box-shadow: 0 2px 4px #12566f87;
 }
 
 .budget__income,
@@ -46,7 +43,12 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 2px #12566f1a;
 }
+
 
 .form-container label {
   margin-bottom: 5px;
@@ -181,7 +183,7 @@ p {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px #12566f87;
+  box-shadow: 0 2px 2px #12566f1a;
 }
 
 .TransferToSaving form {

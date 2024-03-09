@@ -46,10 +46,10 @@ const Balance: React.FC<BalanceProps> = (props) => {
 
   return (
     <>
-      <h1>
+      <h2>
         Total balance:{' '}
         <span>{totalBalance}</span>
-      </h1>
+      </h2>
     </>
   );
 }
