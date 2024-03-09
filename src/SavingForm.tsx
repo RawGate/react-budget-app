@@ -28,7 +28,8 @@ const SavingForm: React.FC<SavingProps> = (props) => {
     0
   );
 
-  const progress: number = (totalSavings / Number(targetSaving)) * 100;
+  let progress: number = (totalSavings / Number(targetSaving)) * 100;
+  progress = Math.min(progress, 100);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -48,7 +49,7 @@ const SavingForm: React.FC<SavingProps> = (props) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="saving__target">Add your saving target:</label>
+        <label htmlFor="saving__target">Add saving target:</label>
         <input
           type="number"
           name="saving"

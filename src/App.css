@@ -8,6 +8,14 @@
   text-align: center;
   background-color: #e2e9ff;
   font-family: "Kode Mono", monospace;
+  opacity: 0;
+  animation: fadeIn 1s ease forwards;
+}
+
+@keyframes fadeIn {
+  100% {
+    opacity: 1;
+  }
 }
 
 .budget__group {
@@ -16,8 +24,7 @@
   margin: 20px 0;
   border: 1px solid #ccc;
   border-radius: 1px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
+  box-shadow: 0 2px 4px #12566f87;
 }
 
 .budget__income,
@@ -25,7 +32,6 @@
 .balance__section {
   width: 45%;
   margin: 10px;
- 
 }
 
 .budget__title {
@@ -34,7 +40,7 @@
   margin-bottom: 20px;
 }
 
-/*IncomeForm and ExpenseForm style*/
+/* IncomeForm and ExpenseForm style */
 .form-container {
   display: flex;
   flex-direction: column;
@@ -48,18 +54,20 @@
 
 .form-container input {
   margin-bottom: 10px;
-  border: 10px;
+  border: 1px solid #ccc;
   border-radius: 90px;
+  padding: 8px;
 }
 
 .button-container {
   display: flex;
   justify-content: center;
-  margin-top: 10px; 
+  margin-top: 10px;
 }
 
 .button-container input {
   padding: 8px;
+  font-family: "Kode Mono", monospace;
   background-color: #2596be;
   color: white;
   border: none;
@@ -94,28 +102,30 @@
   width: 100%;
 }
 
+.history-item:hover {
+  background-color: #12566f15;
+}
+
 .history-item p {
   margin: 0;
-  flex: 1; 
+  flex: 1;
 }
 
 .delete-button {
-  padding: 3px; 
+  padding: 3px;
+  font-family: "Kode Mono", monospace;
   background-color: #2596be;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 9px; 
+  margin-left: 9px;
 }
 
 .delete-button:hover {
   background-color: #12566f;
 }
 
-.delete-button:hover {
-  background-color: #12566f;
-}
 /* SavingForm styles */
 label {
   display: block;
@@ -124,15 +134,17 @@ label {
 
 input {
   width: 100%;
+  font-family: "Kode Mono", monospace;
   padding: 8px;
   margin-bottom: 10px;
   box-sizing: border-box;
-  border: 10px;
+  border: 1px solid #ccc;
   border-radius: 90px;
 }
 
 button {
   padding: 8px;
+  font-family: "Kode Mono", monospace;
   background-color: #2596be;
   color: white;
   border: none;
@@ -169,8 +181,7 @@ p {
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
- 
+  box-shadow: 0 2px 4px #12566f87;
 }
 
 .TransferToSaving form {
@@ -186,21 +197,23 @@ p {
 
 .TransferToSaving input {
   padding: 8px;
+  font-family: "Kode Mono", monospace;
   margin-bottom: 15px;
   font-size: 15px;
-  border: 10px;
+  border: 1px solid #ccc;
   border-radius: 90px;
   width: 200px;
 }
 
 .TransferToSaving input[type="submit"] {
   padding: 8px;
+  font-family: "Kode Mono", monospace;
   background-color: #2596be;
   color: white;
   border: none;
   border-radius: 15px;
   cursor: pointer;
-  width: 110px;
+  width: 170px;
 }
 
 .TransferToSaving input[type="submit"]:hover {
