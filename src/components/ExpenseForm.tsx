@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { z } from 'zod';
+import { message, Modal } from 'antd';
+import 'antd/lib/message/style';
+import 'antd/lib/modal/style';
+import 'antd/lib/input/style';
+import 'antd/lib/button/style';
+import 'antd/lib/form/style';
+import 'antd/lib/date-picker/style';
 import { useForm } from 'react-hook-form';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import '../App.css';
 
 const expenseSchema = z.object({
   source: z.string().nonempty(),
@@ -25,6 +29,8 @@ const Expenses: React.FC<ExpensesProps> = ({
   totalBalance,
 }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState<boolean>(false);
+  const [expenseToDelete, setExpenseToDelete] = useState<number | null>(null);
 
   const onSubmit = (data: any) => {
     const validationResult = expenseSchema.safeParse(data);
@@ -33,12 +39,32 @@ const Expenses: React.FC<ExpensesProps> = ({
       if (totalBalance - data.amount >= 0) {
         onHandleExpenses(data.source, data.amount, data.date);
         reset();
+        message.success('Expense added successfully', 2);
       } else {
-        toast.error('Insufficient balance.');
+        message.error('Insufficient balance.');
       }
     } else {
-      toast.error('Please provide valid expense details.');
+      message.error('Please provide valid expense details.');
     }
+  };
+
+  const handleDeleteExpense = (id: number) => {
+    setExpenseToDelete(id);
+    setDeleteConfirmationVisible(true);
+  };
+
+  const confirmDeleteExpense = () => {
+    if (expenseToDelete) {
+      onDeleteExpense(expenseToDelete);
+      message.success('Expense deleted successfully', 2);
+    }
+    setDeleteConfirmationVisible(false);
+    setExpenseToDelete(null);
+  };
+
+  const cancelDeleteExpense = () => {
+    setDeleteConfirmationVisible(false);
+    setExpenseToDelete(null);
   };
 
   return (
@@ -82,14 +108,22 @@ const Expenses: React.FC<ExpensesProps> = ({
             <p>
               {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
             </p>
-            <button onClick={() => onDeleteExpense(expense.id)} className="delete-button">
+            <button onClick={() => handleDeleteExpense(expense.id)} className="delete-button">
               ✖
             </button>
           </div>
         ))}
       </div>
 
-      <ToastContainer position="top-center" />
+      <Modal
+        visible={deleteConfirmationVisible}
+        onOk={confirmDeleteExpense}
+        onCancel={cancelDeleteExpense}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this expense?</p>
+      </Modal>
     </div>
   );
 };

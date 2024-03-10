@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; //Cannot find module 'react' or its corresponding type declarations.
 
 interface Transaction {
   id: number;

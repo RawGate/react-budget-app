@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { message } from 'antd';
 import '../App.css';
 
 const savingSchema = z.object({
@@ -38,11 +37,9 @@ const SavingForm: React.FC<SavingProps> = (props) => {
     const validationResult = savingSchema.safeParse(data);
 
     if (validationResult.success) {
+      message.success('Saving target added successfully!', 2);
     } else {
-      toast.error('Please provide valid income details.', {
-        toastId: 'error-toast',
-        position: 'top-center',
-      });
+      message.error('Please provide valid Saving amount details.', 2);
     }
   };
 
@@ -77,8 +74,6 @@ const SavingForm: React.FC<SavingProps> = (props) => {
           }}
         ></div>
       </div>
-
-      <ToastContainer />
     </div>
   );
 };

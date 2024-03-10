@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { message, Modal } from 'antd';
 import '../App.css';
+import 'antd/lib/message/style';
+import 'antd/lib/modal/style';
+import 'antd/lib/input/style';
+import 'antd/lib/button/style';
+import 'antd/lib/form/style';
+import 'antd/lib/date-picker/style';
+
+
 
 const incomeSchema = z.object({
   source: z.string().nonempty(),
@@ -29,6 +36,8 @@ const IncomeForm: React.FC<IncomeProps> = ({
   const [source, setSource] = useState<string>('');
   const [amount, setAmount] = useState<string>('');
   const [date, setDate] = useState<string>('');
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState<boolean>(false);
+  const [incomeToDelete, setIncomeToDelete] = useState<number | null>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,13 +50,33 @@ const IncomeForm: React.FC<IncomeProps> = ({
       setSource('');
       setAmount('');
       setDate('');
+      message.success('Income added successfully', 2);
     } else {
       if (Number(amount) < 0) {
-        toast.error('Income amount cannot be less than 0');
+        message.error('Income amount cannot be less than 0', 2);
       } else {
-        toast.error('Please provide valid income details.');
+        message.error('Please provide valid income details.', 2);
       }
     }
+  };
+
+  const handleDeleteIncome = (id: number) => {
+    setIncomeToDelete(id);
+    setDeleteConfirmationVisible(true);
+  };
+
+  const confirmDeleteIncome = () => {
+    if (incomeToDelete) {
+      onDeleteIncome(incomeToDelete);
+      message.success('Income deleted successfully', 2);
+    }
+    setDeleteConfirmationVisible(false);
+    setIncomeToDelete(null);
+  };
+
+  const cancelDeleteIncome = () => {
+    setDeleteConfirmationVisible(false);
+    setIncomeToDelete(null);
   };
 
   const sourceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +136,7 @@ const IncomeForm: React.FC<IncomeProps> = ({
               {income.source.toUpperCase()}: {income.amount} on {income.date}
             </p>
             <button
-              onClick={() => onDeleteIncome(income.id)}
+              onClick={() => handleDeleteIncome(income.id)}
               className="delete-button"
             >
               ✖
@@ -116,10 +145,15 @@ const IncomeForm: React.FC<IncomeProps> = ({
         ))}
       </div>
 
-      <ToastContainer
-        position="top-center"
-        toastStyle={{ marginTop: '50%', transform: 'translateY(-50%)' }}
-      />
+      <Modal
+        visible={deleteConfirmationVisible}
+        onOk={confirmDeleteIncome}
+        onCancel={cancelDeleteIncome}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this income?</p>
+      </Modal>
     </div>
   );
 };
