@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { z } from 'zod';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
+import '../App.css';
 
 const incomeSchema = z.object({
   source: z.string().nonempty(),

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { z } from 'zod';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './App.css';
+import '../App.css';
 
 const savingSchema = z.object({
   targetSaving: z.number().positive(),
@@ -47,7 +47,7 @@ const SavingForm: React.FC<SavingProps> = (props) => {
   };
 
   return (
-    <div>
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
         <label htmlFor="saving__target">Add saving target:</label>
         <input

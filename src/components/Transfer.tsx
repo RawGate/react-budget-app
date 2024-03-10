@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { z } from 'zod';
-import './App.css';
+import '../App.css';
 
 const transferSchema = z.object({
   saving: z.number().positive(),

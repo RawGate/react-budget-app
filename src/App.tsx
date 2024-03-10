@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './App.css';
-import IncomeForm from './IncomeForm';
-import ExpenseForm from './ExpenseForm';
-import SavingForm from './SavingForm';
-import TransferToSaving from './Transfer';
-import Balance from './Balance';
+import IncomeForm from './components/IncomeForm';
+import ExpenseForm from './components/ExpenseForm';
+import SavingForm from './components/SavingForm';
+import TransferToSaving from './components/Transfer';
+import Balance from './components/Balance';
 
 interface Transactions {
   id: number;
