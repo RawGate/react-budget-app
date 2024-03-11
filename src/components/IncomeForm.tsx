@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 import { message, Modal } from 'antd';
 import '../App.css';
@@ -8,8 +8,6 @@ import 'antd/lib/input/style';
 import 'antd/lib/button/style';
 import 'antd/lib/form/style';
 import 'antd/lib/date-picker/style';
-
-
 
 const incomeSchema = z.object({
   source: z.string().nonempty(),
@@ -39,7 +37,7 @@ const IncomeForm: React.FC<IncomeProps> = ({
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState<boolean>(false);
   const [incomeToDelete, setIncomeToDelete] = useState<number | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = { source, amount: Number(amount), date };
 
@@ -58,38 +56,54 @@ const IncomeForm: React.FC<IncomeProps> = ({
         message.error('Please provide valid income details.', 2);
       }
     }
-  };
+  }, [source, amount, date, onHandleIncome]);
 
-  const handleDeleteIncome = (id: number) => {
+  const handleDeleteIncome = useCallback((id: number) => {
     setIncomeToDelete(id);
     setDeleteConfirmationVisible(true);
-  };
+  }, []);
 
-  const confirmDeleteIncome = () => {
+  const confirmDeleteIncome = useCallback(() => {
     if (incomeToDelete) {
       onDeleteIncome(incomeToDelete);
       message.success('Income deleted successfully', 2);
     }
     setDeleteConfirmationVisible(false);
     setIncomeToDelete(null);
-  };
+  }, [onDeleteIncome, incomeToDelete]);
 
-  const cancelDeleteIncome = () => {
+  const cancelDeleteIncome = useCallback(() => {
     setDeleteConfirmationVisible(false);
     setIncomeToDelete(null);
-  };
+  }, []);
 
-  const sourceChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const sourceChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSource(event.target.value);
-  };
+  }, []);
 
-  const amountChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const amountChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setAmount(event.target.value);
-  };
+  }, []);
 
-  const dateChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const dateChangeHandler = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setDate(event.target.value);
-  };
+  }, []);
+
+  const memoizedIncomesList = useMemo(() => {
+    return incomes.map((income) => (
+      <div key={income.id} className="history-item">
+        <p>
+          {income.source.toUpperCase()}: {income.amount} on {income.date}
+        </p>
+        <button
+          onClick={() => handleDeleteIncome(income.id)}
+          className="delete-button"
+        >
+          ✖
+        </button>
+      </div>
+    ));
+  }, [incomes, handleDeleteIncome]);
 
   return (
     <div className="form-container">
@@ -130,19 +144,7 @@ const IncomeForm: React.FC<IncomeProps> = ({
       </form>
 
       <div className="income-history">
-        {incomes.map((income) => (
-          <div key={income.id} className="history-item">
-            <p>
-              {income.source.toUpperCase()}: {income.amount} on {income.date}
-            </p>
-            <button
-              onClick={() => handleDeleteIncome(income.id)}
-              className="delete-button"
-            >
-              ✖
-            </button>
-          </div>
-        ))}
+        {memoizedIncomesList}
       </div>
 
       <Modal

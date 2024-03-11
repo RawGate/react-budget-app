@@ -1,4 +1,6 @@
-import React from 'react'; //Cannot find module 'react' or its corresponding type declarations.
+import React from 'react';
+import { Line } from 'react-chartjs-2';
+import 'chart.js/auto';
 
 interface Transaction {
   id: number;
@@ -44,13 +46,35 @@ const Balance: React.FC<BalanceProps> = (props) => {
 
   props.handleGetTotalBalance(totalBalance);
 
+  const chartData = {
+    labels: ['Total Balance', 'Total Income', 'Total Expense', 'Total Savings'],
+    datasets: [
+      {
+        label: 'Amount',
+        data: [totalBalance, totalIncome, totalExpense, totalSavings],
+        fill: false,
+        borderColor: 'rgba(75, 192, 192, 0.6)',
+      },
+    ],
+  };
+
+  const chartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   return (
-    <>
-      <h2>
-        Total balance:{' '}
-        <span>{totalBalance}</span>
-      </h2>
-    </>
+    <div className="balance-container">
+      <div className="total-balance">
+        <h3>Balance: {totalBalance}</h3>
+      </div>
+      <div className="chart-container">
+        <Line data={chartData} options={chartOptions} />
+      </div>
+    </div>
   );
 }
 

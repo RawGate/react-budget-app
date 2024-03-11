@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import './App.css';
 import IncomeForm from './components/IncomeForm';
 import ExpenseForm from './components/ExpenseForm';
@@ -21,7 +21,7 @@ const App: React.FC = () => {
   const [savings, setSavings] = useState<number[]>([]);
   const [totalBalance, setTotalBalance] = useState<TotalBalance>(0);
 
-  const handleExpenses = (source: string, amount: number, date: string) => {
+  const handleExpenses = useCallback((source: string, amount: number, date: string) => {
     setExpenses((prevExpense) => [
       ...prevExpense,
       {
@@ -31,9 +31,9 @@ const App: React.FC = () => {
         date: date,
       },
     ]);
-  };
+  }, []);
 
-  const handleIncome = (source: string, amount: number, date: string) => {
+  const handleIncome = useCallback((source: string, amount: number, date: string) => {
     setIncomes((prevIncome) => [
       ...prevIncome,
       {
@@ -43,52 +43,77 @@ const App: React.FC = () => {
         date: date,
       },
     ]);
-  };
+  }, []);
 
-  const handleSaving = (amount: number) => {
+  const handleSaving = useCallback((amount: number) => {
     setSavings((prevSaving) => [...prevSaving, amount]);
-  };
+  }, []);
 
-  const handleGetTotalBalance = (total: number) => {
+  const handleGetTotalBalance = useCallback((total: number) => {
     setTotalBalance(total);
-  };
+  }, []);
 
-  const handleDeleteExpense = (id: number) => {
+  const handleDeleteExpense = useCallback((id: number) => {
     setExpenses((prevExpenses) => prevExpenses.filter((expense) => expense.id !== id));
-  };
+  }, []);
 
-  const handleDeleteIncome = (id: number) => {
+  const handleDeleteIncome = useCallback((id: number) => {
     setIncomes((prevIncomes) => prevIncomes.filter((income) => income.id !== id));
-  };
+  }, []);
+
+  const memoizedIncomeForm = useMemo(
+    () => (
+      <IncomeForm
+        onHandleIncome={handleIncome}
+        incomes={incomes}
+        onDeleteIncome={handleDeleteIncome}
+      />
+    ),
+    [handleIncome, incomes, handleDeleteIncome]
+  );
+
+  const memoizedExpenseForm = useMemo(
+    () => (
+      <ExpenseForm
+        onHandleExpenses={handleExpenses}
+        onDeleteExpense={handleDeleteExpense}
+        totalBalance={totalBalance}
+        expenses={expenses}
+      />
+    ),
+    [handleExpenses, handleDeleteExpense, totalBalance, expenses]
+  );
+
+  const memoizedSavingForm = useMemo(() => <SavingForm savings={savings} />, [savings]);
+
+  const memoizedBalance = useMemo(
+    () => (
+      <Balance
+        incomes={incomes}
+        expenses={expenses}
+        savings={savings}
+        handleGetTotalBalance={handleGetTotalBalance}
+      />
+    ),
+    [incomes, expenses, savings, handleGetTotalBalance]
+  );
+
+  const memoizedTransferToSaving = useMemo(
+    () => <TransferToSaving onHandleSaving={handleSaving} totalBalance={totalBalance} />,
+    [handleSaving, totalBalance]
+  );
 
   return (
     <main className="main__container">
       <h1 className="budget__title">Budget App</h1>
       <section className="budget__group">
-        <div className="budget__income">
-          <IncomeForm onHandleIncome={handleIncome} incomes={incomes} onDeleteIncome={handleDeleteIncome} /> 
-        </div>
-        <div className="budget__expense">
-          <ExpenseForm
-            onHandleExpenses={handleExpenses}
-            onDeleteExpense={handleDeleteExpense}
-            totalBalance={totalBalance}
-            expenses={expenses}
-          />
-        </div>
-        <SavingForm savings={savings} />
+        <div className="budget__income">{memoizedIncomeForm}</div>
+        <div className="budget__expense">{memoizedExpenseForm}</div>
+        {memoizedSavingForm}
       </section>
       <section className="balance__section">
-        <Balance
-          incomes={incomes}
-          expenses={expenses}
-          savings={savings}
-          handleGetTotalBalance={handleGetTotalBalance}
-        />
-        <TransferToSaving
-          onHandleSaving={handleSaving}
-          totalBalance={totalBalance}
-        />
+        {memoizedBalance}
+        {memoizedTransferToSaving}
       </section>
     </main>
   );

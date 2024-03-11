@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 import { message, Modal } from 'antd';
 import 'antd/lib/message/style';
@@ -32,7 +32,7 @@ const Expenses: React.FC<ExpensesProps> = ({
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState<boolean>(false);
   const [expenseToDelete, setExpenseToDelete] = useState<number | null>(null);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = useCallback((data: any) => {
     const validationResult = expenseSchema.safeParse(data);
 
     if (validationResult.success) {
@@ -46,26 +46,39 @@ const Expenses: React.FC<ExpensesProps> = ({
     } else {
       message.error('Please provide valid expense details.');
     }
-  };
+  }, [onHandleExpenses, reset, totalBalance]);
 
-  const handleDeleteExpense = (id: number) => {
+  const handleDeleteExpense = useCallback((id: number) => {
     setExpenseToDelete(id);
     setDeleteConfirmationVisible(true);
-  };
+  }, []);
 
-  const confirmDeleteExpense = () => {
+  const confirmDeleteExpense = useCallback(() => {
     if (expenseToDelete) {
       onDeleteExpense(expenseToDelete);
       message.success('Expense deleted successfully', 2);
     }
     setDeleteConfirmationVisible(false);
     setExpenseToDelete(null);
-  };
+  }, [onDeleteExpense, expenseToDelete]);
 
-  const cancelDeleteExpense = () => {
+  const cancelDeleteExpense = useCallback(() => {
     setDeleteConfirmationVisible(false);
     setExpenseToDelete(null);
-  };
+  }, []);
+
+  const memoizedExpensesList = useMemo(() => {
+    return expenses.map((expense) => (
+      <div key={expense.id} className="history-item">
+        <p>
+          {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
+        </p>
+        <button onClick={() => handleDeleteExpense(expense.id)} className="delete-button">
+          ✖
+        </button>
+      </div>
+    ));
+  }, [expenses, handleDeleteExpense]);
 
   return (
     <div className="form-container">
@@ -103,16 +116,7 @@ const Expenses: React.FC<ExpensesProps> = ({
       </form>
 
       <div className="expense-history">
-        {expenses.map((expense) => (
-          <div key={expense.id} className="history-item">
-            <p>
-              {expense.source.toUpperCase()}: {expense.amount} on {expense.date}
-            </p>
-            <button onClick={() => handleDeleteExpense(expense.id)} className="delete-button">
-              ✖
-            </button>
-          </div>
-        ))}
+        {memoizedExpensesList}
       </div>
 
       <Modal
