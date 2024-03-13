@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 import { message, Modal } from 'antd';
+import '../App.css';
 import 'antd/lib/message/style';
 import 'antd/lib/modal/style';
 import 'antd/lib/input/style';

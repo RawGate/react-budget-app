@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { z } from 'zod';
 import '../App.css';
 
@@ -15,7 +15,7 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
   const [saving, setSaving] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = { saving: Number(saving) };
 
@@ -30,11 +30,11 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
         validationResult.success ? 'Not enough balance' : 'Please provide a valid saving amount.'
       );
     }
-  };
+  }, [saving, props.totalBalance]);
 
-  const handleSavingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSavingChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSaving(e.target.value);
-  };
+  }, []);
 
   return (
     <div className="TransferToSaving">
@@ -46,7 +46,7 @@ const TransferToSaving: React.FC<SavingProps> = (props) => {
           value={saving}
           onChange={handleSavingChange}
         />
-        <input type="submit" value="Add to Saving" />
+        <button type="submit">Add to Saving</button>
       </form>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
     </div>
